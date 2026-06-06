@@ -1,17 +1,324 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <title>Fit Finder</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kitchen Table Co — Fit Finder</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      body { font-family: system-ui, sans-serif; background: #FAF7F2; color: #2D6A4F; display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 2rem; text-align: center; }
-      .card { max-width: 520px; border: 1px dashed #2D6A4F; padding: 2rem; border-radius: 4px; }
+      *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+      :root{--green:#2D6A4F;--green-mid:#95C8A8;--green-light:#EAF4EE;--cream:#FAF7F2;--terra:#C4622D;--ink:#1C1C1C;--muted:#6B7280;--border:#E2DDD6;--purple:#7C3AED;--purple-light:#F3EEFF;--blue:#3B7DD8;--blue-light:#EBF3FB;--pink:#D64E8A;--pink-light:#FDE8F1;--orange:#E07A3A;--orange-light:#FEF0E7}
+      body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+      .header{background:var(--green);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+      .logo{font-family:'Playfair Display',serif;color:var(--cream);font-size:20px}.logo span{color:var(--green-mid)}
+      .header-tag{font-size:11px;color:var(--green-mid);letter-spacing:.5px;text-transform:uppercase}
+      .hero{background:var(--green);padding:28px 24px 52px;position:relative}
+      .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:36px;background:var(--cream);border-radius:36px 36px 0 0}
+      .hero-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--green-mid);margin-bottom:8px}
+      .hero-title{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,34px);color:var(--cream);line-height:1.15;margin-bottom:10px}
+      .hero-sub{font-size:13px;color:var(--green-mid);line-height:1.6;max-width:500px}
+      .controls{padding:20px 24px 8px;display:flex;flex-direction:column;gap:12px}
+      .filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+      .filter-section-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);min-width:96px;flex-shrink:0}
+      .chip{padding:5px 13px;border-radius:100px;border:1.5px solid var(--border);background:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .16s ease;white-space:nowrap}
+      .chip:hover{border-color:var(--green);color:var(--green)}
+      .chip.on{background:var(--green);border-color:var(--green);color:white}
+      .search-wrap{padding:0 24px 4px}
+      .search-input{width:100%;max-width:440px;padding:10px 16px 10px 40px;border:1.5px solid var(--border);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;background:white;color:var(--ink);outline:none;transition:border-color .16s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:14px center}
+      .search-input:focus{border-color:var(--green)}
+      .sort-row{padding:8px 24px 4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+      .sort-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+      .sort-btn{padding:4px 12px;border-radius:100px;border:1.5px solid var(--border);background:white;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+      .sort-btn.on{background:var(--terra);border-color:var(--terra);color:white}
+      .results-meta{padding:6px 24px 4px;font-size:12px;color:var(--muted)}
+      .results-meta strong{color:var(--ink)}
+      .grid{padding:8px 24px 48px;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+      .card{background:white;border-radius:16px;border:1.5px solid var(--border);overflow:hidden;cursor:pointer;transition:all .2s ease;display:flex;flex-direction:column}
+      .card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(45,106,79,.12);border-color:var(--green-mid)}
+      .card-top{padding:16px 16px 12px;flex:1}
+      .card-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:12px}
+      .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+      .metric{background:var(--cream);border-radius:10px;padding:9px 10px}
+      .metric.full{grid-column:1/-1}
+      .metric-label{font-size:9.5px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+      .metric-value{font-size:13px;font-weight:600;color:var(--ink);line-height:1.25}
+      .score-bar{height:5px;border-radius:3px;background:#E5E7EB;overflow:hidden;margin-top:5px}
+      .score-fill{height:100%;border-radius:3px}
+      .love-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+      .love-tag{padding:3px 9px;border-radius:100px;font-size:10px;font-weight:500}
+      .card-footer{padding:10px 16px;border-top:1px solid var(--border);background:#FAFAF9;display:flex;align-items:center;justify-content:space-between}
+      .card-cat{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;padding:3px 10px;border-radius:100px}
+      .card-cta{font-size:11px;font-weight:600;color:var(--green)}
+      .overlay{position:fixed;inset:0;background:rgba(28,28,28,.6);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
+      .overlay.open{opacity:1;pointer-events:all}
+      .modal{background:white;border-radius:20px;max-width:580px;width:100%;max-height:88vh;overflow-y:auto;transform:translateY(12px) scale(.98);transition:transform .22s ease;box-shadow:0 24px 64px rgba(0,0,0,.18)}
+      .overlay.open .modal{transform:translateY(0) scale(1)}
+      .modal-close-bar{display:flex;justify-content:flex-end;padding:16px 16px 0}
+      .modal-close{width:30px;height:30px;border-radius:50%;border:none;background:#F0F0F0;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-family:'DM Sans',sans-serif}
+      .modal-close:hover{background:#ddd}
+      .modal-inner{padding:4px 22px 26px}
+      .modal-cat-badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px}
+      .modal-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:6px}
+      .modal-tagline{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:18px}
+      .modal-section{margin-bottom:16px}
+      .modal-section-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+      .modal-metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .modal-metric{background:var(--cream);border-radius:10px;padding:12px 14px}
+      .modal-metric-icon{font-size:18px;margin-bottom:4px}
+      .modal-metric-label{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+      .modal-metric-value{font-size:15px;font-weight:700;color:var(--ink)}
+      .modal-metric-detail{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}
+      .prereq-list{display:flex;flex-wrap:wrap;gap:6px}
+      .prereq-chip{padding:4px 12px;border-radius:100px;background:var(--green-light);color:var(--green);font-size:11px;font-weight:500}
+      .builds-list{display:flex;flex-wrap:wrap;gap:6px}
+      .build-chip{padding:4px 12px;border-radius:100px;background:var(--purple-light);color:var(--purple);font-size:11px;font-weight:500}
+      .modal-cta{margin-top:20px;display:flex;gap:10px}
+      .btn-p{flex:1;padding:12px;background:var(--green);color:white;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .16s}
+      .btn-p:hover{background:#235c3f}
+      .btn-s{padding:12px 20px;background:white;color:var(--green);border:1.5px solid var(--green);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .16s}
+      .btn-s:hover{background:var(--green-light)}
+      .empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+      .empty-emoji{font-size:40px;margin-bottom:12px}
+      .empty-h{font-family:'Playfair Display',serif;font-size:20px;color:var(--ink);margin-bottom:8px}
     </style>
   </head>
   <body>
-    <div class="card">
-      <h2 style="margin-top:0">Fit Finder goes here</h2>
-      <p>Replace <code>public/fit-finder.html</code> with your fit finder HTML and this iframe will pick it up automatically.</p>
+    <div class="header">
+      <div class="logo">Kitchen Table <span>Co</span></div>
+      <div class="header-tag">Concept Fit Finder</div>
     </div>
+    <div class="hero">
+      <div class="hero-label">Find Your Business</div>
+      <div class="hero-title">What's the right fit for you?</div>
+      <div class="hero-sub">
+        Filter by what actually matters — how fast you'll earn, how much, what it costs to start, how much time it
+        takes, and whether you'll love it.
+      </div>
+    </div>
+    <div class="controls">
+      <div class="filter-row">
+        <span class="filter-section-label">💸 First income</span>
+        <button class="chip" data-group="speed" data-val="fast">Under 2 weeks</button>
+        <button class="chip" data-group="speed" data-val="medium">2–4 weeks</button>
+        <button class="chip" data-group="speed" data-val="slow">Month+ to ramp</button>
+      </div>
+      <div class="filter-row">
+        <span class="filter-section-label">📈 Monthly earn</span>
+        <button class="chip" data-group="earn" data-val="low">Under $500</button>
+        <button class="chip" data-group="earn" data-val="mid">$500–$1,200</button>
+        <button class="chip" data-group="earn" data-val="high">$1,200+</button>
+      </div>
+      <div class="filter-row">
+        <span class="filter-section-label">💰 Startup cost</span>
+        <button class="chip" data-group="cost" data-val="zero">$0–$100</button>
+        <button class="chip" data-group="cost" data-val="low">$100–$300</button>
+        <button class="chip" data-group="cost" data-val="mid">$300–$500</button>
+      </div>
+      <div class="filter-row">
+        <span class="filter-section-label">⏱ Weekly time</span>
+        <button class="chip" data-group="time" data-val="low">Under 5 hrs</button>
+        <button class="chip" data-group="time" data-val="mid">5–10 hrs</button>
+        <button class="chip" data-group="time" data-val="high">10+ hrs</button>
+      </div>
+      <div class="filter-row">
+        <span class="filter-section-label">❤️ I love...</span>
+        <button class="chip" data-group="love" data-val="kids">Kids</button>
+        <button class="chip" data-group="love" data-val="food">Food</button>
+        <button class="chip" data-group="love" data-val="community">Community</button>
+        <button class="chip" data-group="love" data-val="events">Events</button>
+        <button class="chip" data-group="love" data-val="organizing">Organizing</button>
+        <button class="chip" data-group="love" data-val="outdoors">Outdoors</button>
+        <button class="chip" data-group="love" data-val="creative">Creative</button>
+        <button class="chip" data-group="love" data-val="animals">Animals</button>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input class="search-input" type="text" id="searchInput" placeholder="Search concepts..." />
+    </div>
+    <div class="sort-row">
+      <span class="sort-label">Sort:</span>
+      <button class="sort-btn on" data-sort="fit">Best fit</button>
+      <button class="sort-btn" data-sort="earn">Highest earning</button>
+      <button class="sort-btn" data-sort="speed">Fastest money</button>
+      <button class="sort-btn" data-sort="cost">Lowest cost</button>
+      <button class="sort-btn" data-sort="time">Least time</button>
+    </div>
+    <div class="results-meta" id="resultsMeta"></div>
+    <div class="grid" id="grid"></div>
+    <div class="overlay" id="overlay">
+      <div class="modal">
+        <div class="modal-close-bar"><button class="modal-close" id="modalClose">✕</button></div>
+        <div class="modal-inner" id="modalInner"></div>
+      </div>
+    </div>
+    <script>
+      const C=[
+        {id:1,name:"Neighborhood Walking Club",cat:"community",cc:{bg:"#EAF4EE",c:"#2D6A4F"},tagline:"Weekly themed neighborhood walks monetized through premium membership and local sponsorships.",speed:"fast",speedLabel:"1–2 weeks",earn:"low",earnLabel:"$300–$700/mo",earnNum:500,costCat:"zero",costLabel:"$0–$75",costNum:38,time:"low",timeLabel:"2–4 hrs/wk",timeNum:3,love:["community","outdoors"],model:"Organize weekly neighborhood walks — themed routes, stroller-friendly, morning social walks. Start free, monetize through premium membership tiers and local coffee shop or wellness brand sponsorships.",prereqs:["Friendly and punctual","Community-oriented","Physically mobile"],builds:["Route planning guide","Membership pricing model","Event calendar template","Safety SOP","Canva marketing kit","Local sponsorship pitch"],umbrella:"WalkTogetherCo.com"},
+        {id:2,name:"Neighborhood Babysitting Co-op",cat:"community",cc:{bg:"#EAF4EE",c:"#2D6A4F"},tagline:"Run a point-based babysitting co-op. Families swap care hours — you charge a coordination fee.",speed:"fast",speedLabel:"1–2 weeks",earn:"low",earnLabel:"$300–$600/mo",earnNum:450,costCat:"zero",costLabel:"$0–$50",costNum:25,time:"low",timeLabel:"3–5 hrs/wk",timeNum:4,love:["kids","community","organizing"],model:"Families earn and spend care hours watching each other's kids. You manage the point system, vetting, and logistics. Charge a monthly coordination fee per family. No childcare licensing needed.",prereqs:["Organized","Trustworthy","Good communicator","Parent (lived credibility)"],builds:["Co-op structure guide","Point system rules","Family intake form","Monthly coordination SOP","Liability waiver","Pricing model"],umbrella:"CareSwapCo.com"},
+        {id:3,name:"Local Business Gift Card Bundles",cat:"services",cc:{bg:"#FDE8F1",c:"#D64E8A"},tagline:"Bundle local gift cards into curated packages. Commission model — zero inventory risk.",speed:"fast",speedLabel:"1–2 weeks",earn:"mid",earnLabel:"$600–$1,400/mo",earnNum:1000,costCat:"zero",costLabel:"$0–$150",costNum:75,time:"low",timeLabel:"4–6 hrs/wk",timeNum:5,love:["community","organizing","creative"],model:"Curate and sell bundled gift cards from local businesses — shop local holiday gifts, date night packs, girls day bundles. Commission model with local vendors. Peak revenue around major holidays.",prereqs:["Relationship-oriented","Organized","Comfortable with sales"],builds:["Vendor recruitment SOP","Bundle pricing and margin calculator","Order fulfillment guide","Holiday calendar","Canva marketing kit"],umbrella:"ShopLocalBundle.com"},
+        {id:4,name:"Dog Walking + Pet Sitting Co-op",cat:"services",cc:{bg:"#F3EEFF",c:"#7C3AED"},tagline:"Coordinate a neighborhood pet care network. You manage bookings — you don't walk the dogs.",speed:"fast",speedLabel:"1–2 weeks",earn:"mid",earnLabel:"$600–$1,200/mo",earnNum:900,costCat:"zero",costLabel:"$0–$100",costNum:50,time:"mid",timeLabel:"5–8 hrs/wk",timeNum:6,love:["animals","community","organizing"],model:"Recruit and vet a small roster of local walkers and sitters. Handle all bookings and payments, take a coordination fee. You never have to pick up a leash if you don't want to.",prereqs:["Animal lover","Organized","Reliable","Comfortable vetting people"],builds:["Walker/sitter vetting SOP","Booking system setup guide","Pricing model","Client agreement","Walker agreement","Canva marketing kit"],umbrella:"PawCoNetwork.com"},
+        {id:5,name:"Neighborhood Freezer Meal Co-op",cat:"food",cc:{bg:"#FEF0E7",c:"#E07A3A"},tagline:"Coordinate a monthly freezer meal exchange. Pure logistics — you don't cook.",speed:"fast",speedLabel:"1–2 weeks",earn:"low",earnLabel:"$300–$700/mo",earnNum:500,costCat:"zero",costLabel:"$0–$75",costNum:38,time:"low",timeLabel:"3–5 hrs/wk",timeNum:4,love:["food","community","organizing"],model:"Each family makes one large batch and exchanges portions. You manage sign-ups, recipes, allergen tracking. Charge a monthly coordination fee. No cooking required.",prereqs:["Organized","Reliable","Comfortable with group logistics"],builds:["Coordination SOP","Recipe submission system","Exchange day checklist","Member agreement","Allergen tracking template","Pricing model"],umbrella:"FreezerMealCo.com"},
+        {id:6,name:"Plant Swap + Garden Club",cat:"community",cc:{bg:"#EAF4EE",c:"#2D6A4F"},tagline:"Monthly plant swaps with a light social event. Starter kit add-ons make it a product business.",speed:"fast",speedLabel:"2 weeks",earn:"low",earnLabel:"$400–$900/mo",earnNum:650,costCat:"zero",costLabel:"$50–$150",costNum:100,time:"low",timeLabel:"3–5 hrs/wk",timeNum:4,love:["outdoors","community","creative"],model:"Monthly plant swaps where members bring cuttings to trade. Operator hosts, manages community, and sells add-on starter kits. Seasonal planting guides and premium membership tier.",prereqs:["Plant lover (casual is fine)","Community-oriented","Outdoor space access"],builds:["Event SOPs","Member intake form","Seasonal swap guides","Premium membership pricing","Canva marketing kit"],umbrella:"LocalPlantSwap.com"},
+        {id:7,name:"Mom's Night Out Series",cat:"events",cc:{bg:"#FDE8F1",c:"#D64E8A"},tagline:"Recurring monthly events for moms. Ticketed, sponsor-friendly, wildly replicable.",speed:"medium",speedLabel:"2–3 weeks",earn:"mid",earnLabel:"$600–$1,200/mo",earnNum:900,costCat:"zero",costLabel:"$0–$100",costNum:50,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["events","community"],model:"Recurring monthly events at restaurants, wine bars, studios. Ticket sales via Eventbrite or direct. Venue outreach is the main work — most venues will host for free or revenue share.",prereqs:["Socially connected","Organized","Comfortable with venue outreach"],builds:["Event SOPs","Venue outreach scripts","Sponsorship pitch deck","Canva event flyer templates","Email list setup guide","Monthly planning calendar"],umbrella:"MomsNightOutCo.com"},
+        {id:8,name:"Clothing Swap Coordinator",cat:"events",cc:{bg:"#FDE8F1",c:"#D64E8A"},tagline:"Quarterly clothing swaps. School uniform and kids-only events make it year-round.",speed:"medium",speedLabel:"2–3 weeks",earn:"low",earnLabel:"$300–$700/mo",earnNum:500,costCat:"zero",costLabel:"$0–$100",costNum:50,time:"low",timeLabel:"3–5 hrs/wk",timeNum:4,love:["community","events","creative"],model:"Run quarterly clothing swaps — collect, sort, and host. Participation fee or donation. Add-ons: styled pop-up shop, school uniform swaps, kids-only seasonal swaps.",prereqs:["Community-oriented","Organized","No fashion expertise needed"],builds:["Event logistics SOP","Clothing collection and sorting guide","Pricing model","Canva marketing kit","School/community outreach scripts"],umbrella:"LocalSwapCo.com"},
+        {id:9,name:"Backyard Egg CSA Coordinator",cat:"food",cc:{bg:"#FEF0E7",c:"#E07A3A"},tagline:"Connect backyard chicken owners with egg subscribers. Pure matchmaking — no chickens required.",speed:"medium",speedLabel:"2–4 weeks",earn:"low",earnLabel:"$300–$800/mo",earnNum:550,costCat:"zero",costLabel:"$0–$100",costNum:50,time:"low",timeLabel:"3–6 hrs/wk",timeNum:4,love:["food","community","outdoors"],model:"Match backyard chicken owners with local egg subscribers. Manage routes, payments, and logistics. Subscription model, weekly delivery or pickup.",prereqs:["Organized","Comfortable with logistics","Local community ties"],builds:["Farmer onboarding SOP","Subscriber agreement","Route planning template","Payment processing guide","Egg quality standards doc","Canva marketing kit"],umbrella:"BackyardEggCo.com"},
+        {id:10,name:"Produce Co-op Coordinator",cat:"food",cc:{bg:"#FEF0E7",c:"#E07A3A"},tagline:"Organize bulk produce orders from local farms. Small weekly coordination fee per household.",speed:"medium",speedLabel:"2–3 weeks",earn:"low",earnLabel:"$400–$900/mo",earnNum:650,costCat:"zero",costLabel:"$0–$100",costNum:50,time:"low",timeLabel:"4–6 hrs/wk",timeNum:5,love:["food","community","organizing"],model:"Weekly or biweekly group produce buy from a local farm. Divide into household shares, coordinate pickup. Charge a small weekly coordination fee per household.",prereqs:["Organized","Reliable","Comfortable with logistics and money handling"],builds:["Farm sourcing SOP","Share pricing model","Order coordination template","Member agreement","Payment processing guide","Canva marketing kit"],umbrella:"FreshShareCo.com"},
+        {id:11,name:"Book Club in a Box",cat:"community",cc:{bg:"#EAF4EE",c:"#2D6A4F"},tagline:"Curate and deliver monthly book club kits. No book club to run or facilitate.",speed:"medium",speedLabel:"3–4 weeks",earn:"mid",earnLabel:"$600–$1,400/mo",earnNum:1000,costCat:"low",costLabel:"$200–$400",costNum:300,time:"mid",timeLabel:"5–8 hrs/wk",timeNum:6,love:["creative","community"],model:"Monthly book club kits — book, discussion guide, themed snack suggestions, cozy extras. You curate and deliver. City-branded editions make each territory distinct.",prereqs:["Love of reading","Curation taste","Reliable logistics"],builds:["Book selection SOPs","Wholesale sourcing guide","Discussion guide template","Subscription pricing model","Packaging guide","Customer retention scripts"],umbrella:"PagedCo.com"},
+        {id:12,name:"Homeschool Co-op Coordinator",cat:"community",cc:{bg:"#EAF4EE",c:"#2D6A4F"},tagline:"Organize homeschool pod logistics — not the curriculum. Families pay a coordination fee.",speed:"medium",speedLabel:"2–4 weeks",earn:"mid",earnLabel:"$500–$1,100/mo",earnNum:800,costCat:"zero",costLabel:"$0–$100",costNum:50,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["kids","community","organizing"],model:"Run a weekly homeschool pod: scheduling, guest teachers, field trips, group buys. You coordinate — you don't teach. Homeschool communities are tight-knit and word-of-mouth driven.",prereqs:["Organized","Homeschool-adjacent network","Light admin comfort"],builds:["Co-op structure guide","Scheduling templates","Family intake form","Fee structure model","Vendor outreach scripts","Liability waiver"],umbrella:"HomeschoolPodCo.com"},
+        {id:13,name:"Meal Prep Co-op",cat:"food",cc:{bg:"#FEF0E7",c:"#E07A3A"},tagline:"Coordinate batch-cooking for 6–12 households. Pure coordination — no chef required.",speed:"medium",speedLabel:"2–3 weeks",earn:"low",earnLabel:"$400–$900/mo",earnNum:650,costCat:"zero",costLabel:"$0–$150",costNum:75,time:"low",timeLabel:"4–6 hrs/wk",timeNum:5,love:["food","community","organizing"],model:"Organize a small group to batch-cook weekly or biweekly. Members pay a monthly fee; you coordinate recipes, shopping, and logistics.",prereqs:["Organized","Good communicator","Cooking competence (not chef-level)"],builds:["Member agreement","Recipe rotation system","Shopping list templates","Payment SOP","Onboarding script","Liability waiver"],umbrella:"TableCoOp.com"},
+        {id:14,name:"Sensory-Friendly Playdate Network",cat:"community",cc:{bg:"#EBF3FB",c:"#3B7DD8"},tagline:"Low-stimulation playdates for kids with sensory needs. OT referral network makes it self-growing.",speed:"medium",speedLabel:"3–4 weeks",earn:"mid",earnLabel:"$600–$1,200/mo",earnNum:900,costCat:"zero",costLabel:"$100–$250",costNum:175,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["kids","community"],model:"Sensory-aware playdates for kids with sensory needs or autism. Partner with local OTs and play therapists. Lived-experience pre-req is your competitive moat.",prereqs:["Parent of child with sensory needs","Empathy","Organization"],builds:["Event SOPs","Sensory environment checklist","Family intake form","Partnership outreach scripts","Pricing model","Canva materials"],umbrella:"SensoryPlayCo.com"},
+        {id:15,name:"New Mom Welcome Baskets",cat:"services",cc:{bg:"#FDE8F1",c:"#D64E8A"},tagline:"Partner with OBs, midwives, and realtors to deliver welcome baskets. Referral-driven.",speed:"medium",speedLabel:"3–4 weeks",earn:"mid",earnLabel:"$600–$1,400/mo",earnNum:1000,costCat:"low",costLabel:"$150–$400",costNum:275,time:"mid",timeLabel:"5–8 hrs/wk",timeNum:6,love:["community","creative","organizing"],model:"Deliver curated welcome baskets to new moms. Partners pay per delivery as a client gift. Once referral relationships are established, nearly self-running.",prereqs:["Organized","Relationship-oriented","Comfortable with outreach"],builds:["Partner outreach scripts","Basket tier pricing guide","Supplier sourcing list","Order tracking SOP","Thank-you note templates","Canva brand kit"],umbrella:"WelcomeBasketCo.com"},
+        {id:16,name:"Move-In Welcome Coordinator",cat:"services",cc:{bg:"#EAF4EE",c:"#2D6A4F"},tagline:"Partner with realtors for closing gift delivery. Realtor pays — you deliver.",speed:"medium",speedLabel:"3–4 weeks",earn:"mid",earnLabel:"$700–$1,400/mo",earnNum:1050,costCat:"low",costLabel:"$100–$300",costNum:200,time:"low",timeLabel:"4–7 hrs/wk",timeNum:5,love:["community","organizing"],model:"Partner with realtors to deliver 'welcome to the neighborhood' packages. Realtor pays per delivery as a client gift. One strong realtor relationship can fill your calendar.",prereqs:["Organized","Realtor network or willingness to pitch","Local business connections"],builds:["Realtor pitch deck","Package tier pricing","Local vendor sourcing guide","Delivery SOP","Follow-up email scripts","Canva materials"],umbrella:"NewNeighborCo.com"},
+        {id:17,name:"Baked Goods Subscription",cat:"food",cc:{bg:"#FEF0E7",c:"#E07A3A"},tagline:"Monthly homemade baked goods locally delivered. Cottage food compliant — no commercial kitchen.",speed:"medium",speedLabel:"2–3 weeks",earn:"mid",earnLabel:"$500–$1,200/mo",earnNum:850,costCat:"low",costLabel:"$100–$300",costNum:200,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["food","creative"],model:"Weekly or monthly subscription boxes of homemade baked goods. Fully cottage food law compliant. Seasonal menus and gifting add-ons.",prereqs:["Baking skill","Reliable schedule","Cottage food registration (easy, low cost)"],builds:["Cottage food compliance guide","Menu rotation templates","Subscription pricing model","Order tracking sheet","Packaging SOPs"],umbrella:"LocalBakeClub.com"},
+        {id:18,name:"Local Experience Gifting Curator",cat:"services",cc:{bg:"#F3EEFF",c:"#7C3AED"},tagline:"Package local experiences as gifts. Commission model — zero inventory risk.",speed:"medium",speedLabel:"2–4 weeks",earn:"mid",earnLabel:"$700–$1,500/mo",earnNum:1100,costCat:"zero",costLabel:"$0–$150",costNum:75,time:"mid",timeLabel:"5–8 hrs/wk",timeNum:6,love:["community","creative","events"],model:"Curate and sell local experience gift packages — date nights, family adventure days, girls trip itineraries. Commission model with local vendors.",prereqs:["Local knowledge","Curation instinct","Relationship-oriented","Organized"],builds:["Vendor partnership outreach SOP","Experience package templates","Pricing and commission model","Gift card/voucher fulfillment guide","Canva lookbook and social kit"],umbrella:"LocalExperienceBox.com"},
+        {id:19,name:"Local Vendor Gift Box Curator",cat:"services",cc:{bg:"#F3EEFF",c:"#7C3AED"},tagline:"Source local products, build curated gift boxes. Corporate gifting is the big money.",speed:"medium",speedLabel:"3–4 weeks",earn:"high",earnLabel:"$1,200–$2,500/mo",earnNum:1850,costCat:"low",costLabel:"$200–$500",costNum:350,time:"mid",timeLabel:"8–12 hrs/wk",timeNum:10,love:["creative","community","organizing"],model:"Curate gift boxes from local makers. Sell direct and through realtor/corporate referrals. Corporate gifting at the hyperlocal level is largely untapped.",prereqs:["Eye for curation","Relationship-oriented","Organized logistics"],builds:["Vendor sourcing SOP","Pricing tiers and margin calculator","Corporate sales pitch template","Packaging guide","Seasonal box calendar","Canva brand kit"],umbrella:"LocalGiftBoxCo.com"},
+        {id:20,name:"Neighborhood Tool Library",cat:"community",cc:{bg:"#EAF4EE",c:"#2D6A4F"},tagline:"Manage a tool lending library. Source donations from the community — members pay monthly.",speed:"slow",speedLabel:"4–6 weeks",earn:"low",earnLabel:"$300–$700/mo",earnNum:500,costCat:"zero",costLabel:"$0–$200",costNum:100,time:"low",timeLabel:"3–5 hrs/wk",timeNum:4,love:["community","organizing"],model:"Neighborhood tool lending library. Members pay a small monthly fee. Source tools via community donations. Best in tight-knit neighborhoods or HOA communities.",prereqs:["Organized","Community-connected","Handy enough to evaluate tool condition"],builds:["Inventory management SOP","Member agreement","Tool donation outreach scripts","Pricing model","Liability waiver","Canva marketing kit"],umbrella:"ToolShareCo.com"},
+        {id:21,name:"Craft Club",cat:"community",cc:{bg:"#EAF4EE",c:"#2D6A4F"},tagline:"Weekly craft sessions for kids or adults. Membership + drop-in + birthday party add-ons.",speed:"medium",speedLabel:"2–3 weeks",earn:"mid",earnLabel:"$700–$1,400/mo",earnNum:1050,costCat:"low",costLabel:"$200–$500",costNum:350,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["creative","kids","community"],model:"Monthly or weekly craft sessions at a local venue or home. Membership + drop-in. Add-ons: supply kits, themed event nights, birthday party packages. Choose your audience: adult makers or kids.",prereqs:["Crafty (not expert-level)","Organized","Has a car","Comfortable with small groups"],builds:["Session SOPs","Supply sourcing guide","Pricing calculator","Membership agreement","Canva marketing kit","Stripe setup guide"],umbrella:"CraftClubCo.com"},
+        {id:22,name:"Kids Art Club",cat:"kids",cc:{bg:"#EBF3FB",c:"#3B7DD8"},tagline:"Small-group art sessions using real materials. End-of-season gallery show drives retention.",speed:"medium",speedLabel:"2–4 weeks",earn:"mid",earnLabel:"$700–$1,400/mo",earnNum:1050,costCat:"low",costLabel:"$200–$400",costNum:300,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["kids","creative"],model:"Small groups (6–10 kids), themed monthly projects with real art materials. End-of-season gallery show creates community. Birthday party upsell builds cash flow.",prereqs:["Artistically inclined","Comfortable with kids","Patient"],builds:["12-month project curriculum","Supply sourcing guide","Waiver","Pricing model","Gallery show SOP","Canva kit"],umbrella:"KidsArtClubCo.com"},
+        {id:23,name:"Kids Nature Journaling Club",cat:"kids",cc:{bg:"#EBF3FB",c:"#3B7DD8"},tagline:"Weekly outdoor sessions where kids draw and document nature. Journal kit add-ons.",speed:"medium",speedLabel:"2–3 weeks",earn:"mid",earnLabel:"$600–$1,200/mo",earnNum:900,costCat:"low",costLabel:"$150–$300",costNum:225,time:"mid",timeLabel:"5–8 hrs/wk",timeNum:6,love:["kids","outdoors","creative"],model:"Weekly outdoor sessions at parks or trails. Kids observe, draw, document. Seasonal themes. Add-ons: journal kits, parent-and-me sessions, school partnerships.",prereqs:["Loves outdoors","Comfortable with kids","Basic nature knowledge"],builds:["12-month curriculum","Supply kit sourcing list","Parent waiver","Pricing model","Canva marketing templates","Instagram content kit"],umbrella:"WildJournalClub.com"},
+        {id:24,name:"Kids Outdoor Adventure Club",cat:"kids",cc:{bg:"#EBF3FB",c:"#3B7DD8"},tagline:"Weekly outdoor adventures — hiking, creek exploration, scavenger hunts.",speed:"medium",speedLabel:"2–4 weeks",earn:"mid",earnLabel:"$700–$1,400/mo",earnNum:1050,costCat:"low",costLabel:"$100–$250",costNum:175,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["kids","outdoors"],model:"Weekly outdoor adventures for kids. Small groups. School field trip coordination and summer intensive weeks are significant revenue add-ons.",prereqs:["Outdoorsy","Comfortable with kids","Basic first aid certification"],builds:["12-month adventure curriculum","Trail and location guide","Waiver","Pricing model","School outreach SOP","Canva kit"],umbrella:"WildKidsCo.com"},
+        {id:25,name:"Kids Cooking Club",cat:"kids",cc:{bg:"#EBF3FB",c:"#3B7DD8"},tagline:"Hands-on cooking for kids ages 5–12. Birthday cooking parties are a strong revenue add-on.",speed:"medium",speedLabel:"2–4 weeks",earn:"mid",earnLabel:"$700–$1,400/mo",earnNum:1050,costCat:"low",costLabel:"$150–$350",costNum:250,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["kids","food","creative"],model:"Themed cooking sessions for kids — pizza night, breakfast for dinner, holiday menus. Birthday cooking party add-on is a significant revenue driver.",prereqs:["Comfortable cooking with kids","Patient","Food handler permit (easy to get)"],builds:["12-month session curriculum","Recipe card templates","Supply sourcing list","Waiver","Pricing model","Birthday party upsell SOP"],umbrella:"LittleChefsCo.com"},
+        {id:26,name:"Kids STEM Club",cat:"kids",cc:{bg:"#EBF3FB",c:"#3B7DD8"},tagline:"Hands-on STEM for elementary-age kids. School partnership and birthday add-ons.",speed:"medium",speedLabel:"3–4 weeks",earn:"mid",earnLabel:"$700–$1,500/mo",earnNum:1100,costCat:"low",costLabel:"$150–$400",costNum:275,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["kids","creative"],model:"Weekly STEM sessions. Experiments, building challenges, simple coding. Membership or drop-in. Birthday party packages and school enrichment partnerships are your growth levers.",prereqs:["Curious","Comfortable with kids","Basic STEM enthusiasm (no degree needed)"],builds:["12-month activity curriculum","Supply sourcing guide","Waiver","Pricing model","School partnership outreach scripts","Birthday party SOP"],umbrella:"TinkerClubCo.com"},
+        {id:27,name:"Kids Yoga + Mindfulness Club",cat:"kids",cc:{bg:"#EBF3FB",c:"#3B7DD8"},tagline:"Weekly yoga for kids ages 3–10. School and daycare partnerships scale it fast.",speed:"medium",speedLabel:"3–4 weeks",earn:"mid",earnLabel:"$600–$1,300/mo",earnNum:950,costCat:"low",costLabel:"$150–$350",costNum:250,time:"mid",timeLabel:"5–8 hrs/wk",timeNum:6,love:["kids","community"],model:"Simple poses, breathing exercises, guided imagination. Parks, rented studios, or homes. School and daycare partnerships are the fast path to consistent revenue.",prereqs:["Kids yoga certification (many online under $200)","Calm demeanor"],builds:["12-month session curriculum","Certification sourcing guide","Waiver","Pricing model","School partnership outreach SOP","Canva kit"],umbrella:"LittleZenCo.com"},
+        {id:28,name:"Kids Music + Movement Club",cat:"kids",cc:{bg:"#EBF3FB",c:"#3B7DD8"},tagline:"Weekly music and movement for babies, toddlers, and preschoolers with a caregiver.",speed:"medium",speedLabel:"2–3 weeks",earn:"mid",earnLabel:"$700–$1,400/mo",earnNum:1050,costCat:"low",costLabel:"$100–$250",costNum:175,time:"mid",timeLabel:"5–8 hrs/wk",timeNum:6,love:["kids","creative","community"],model:"Songs, instruments, dancing, rhythm activities for toddlers with parents or caregivers. Birthday party and school enrichment add-ons. Universally beloved concept.",prereqs:["Musical background (casual OK)","Warm with young children"],builds:["12-month session curriculum","Instrument sourcing guide","Waiver","Pricing model","School partnership SOP","Canva kit"],umbrella:"LittleRhythmCo.com"},
+        {id:29,name:"Kids Chapter Book Club",cat:"kids",cc:{bg:"#EBF3FB",c:"#3B7DD8"},tagline:"Monthly in-person book club for kids 6–12. Themed activities, snacks, summer reading challenges.",speed:"medium",speedLabel:"2–3 weeks",earn:"low",earnLabel:"$400–$900/mo",earnNum:650,costCat:"zero",costLabel:"$50–$150",costNum:100,time:"low",timeLabel:"3–5 hrs/wk",timeNum:4,love:["kids","creative","community"],model:"Operator selects the book, leads discussion, plans a themed activity or snack per book. Summer reading challenges and school partnerships extend revenue year-round.",prereqs:["Love of children's literature","Comfortable with kids","Organized"],builds:["12-month book list and discussion guide","Activity pairing guide","Pricing model","Parent communication templates","School outreach SOP","Canva kit"],umbrella:"LittleReadersClub.com"},
+        {id:30,name:"Kids Foreign Language Playgroup",cat:"kids",cc:{bg:"#EBF3FB",c:"#3B7DD8"},tagline:"Natural language immersion through songs and games. Multiple language tracks per territory.",speed:"medium",speedLabel:"2–3 weeks",earn:"mid",earnLabel:"$600–$1,200/mo",earnNum:900,costCat:"zero",costLabel:"$50–$150",costNum:100,time:"mid",timeLabel:"5–8 hrs/wk",timeNum:6,love:["kids","creative","community"],model:"Toddlers absorb a target language through songs, games, and activities. A single territory can support multiple language tracks — Spanish, French, and Mandarin as separate operators.",prereqs:["Fluent in a second language","Comfortable with small children","Warm and playful"],builds:["12-month curriculum by language track","Activity guide","Parent intake form","Pricing model","Canva marketing kit"],umbrella:"LinguaPlayCo.com"},
+        {id:31,name:"Teen Babysitter Certification",cat:"services",cc:{bg:"#F3EEFF",c:"#7C3AED"},tagline:"Train teens, match them with families. Teens pay for the workshop — families pay the matching fee.",speed:"slow",speedLabel:"4–6 weeks",earn:"mid",earnLabel:"$700–$1,500/mo",earnNum:1100,costCat:"low",costLabel:"$100–$250",costNum:175,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["kids","community","organizing"],model:"Periodic babysitter certification workshops for teens, then match certified teens with local families. Teens pay for the workshop; families pay a matching fee.",prereqs:["Comfortable instructing teens","Organized","CPR certified (cheap and easy)"],builds:["Workshop curriculum","Certification tracking system","Family and teen intake forms","Matching SOP","Pricing model","Liability language","Canva marketing kit"],umbrella:"TrustSitterCo.com"},
+        {id:32,name:"Teen Entrepreneurship Workshops",cat:"events",cc:{bg:"#FDE8F1",c:"#D64E8A"},tagline:"Monthly half-day business skills workshops for teens. Ticketed, 8–15 teens per session.",speed:"slow",speedLabel:"4–6 weeks",earn:"mid",earnLabel:"$800–$1,600/mo",earnNum:1200,costCat:"zero",costLabel:"$100–$250",costNum:175,time:"mid",timeLabel:"8–12 hrs/wk",timeNum:10,love:["community","events"],model:"Monthly workshops teaching teens real business skills — pricing, social media, selling, simple financials. Ticketed events with mentorship add-ons.",prereqs:["Business background helpful","Comfortable speaking to small groups","Energetic"],builds:["12-month workshop curriculum","Workbook templates","Ticket pricing guide","Venue sourcing SOP","Parent communication scripts","Canva event kit"],umbrella:"YoungFoundersCo.com"},
+        {id:33,name:"Holiday Market Coordinator",cat:"events",cc:{bg:"#FDE8F1",c:"#D64E8A"},tagline:"Organize 2–4 curated holiday markets per year. Vendor table fees plus percentage of sales.",speed:"slow",speedLabel:"4–8 weeks",earn:"mid",earnLabel:"$800–$2,000/mo avg",earnNum:1400,costCat:"low",costLabel:"$200–$500",costNum:350,time:"high",timeLabel:"10–15 hrs/wk event weeks",timeNum:12,love:["events","community","creative"],model:"Small curated holiday markets 3–4 times per year. Charge vendors table fees and take a percentage or flat rental. One good market can generate $2,000+ in a weekend.",prereqs:["Event-minded","Organized","Local vendor network or willingness to build one"],builds:["Market coordinator SOP","Vendor application + contract","Booth pricing model","Venue sourcing guide","Day-of logistics checklist","Canva event marketing kit"],umbrella:"LocalMarketCo.com"},
+        {id:34,name:"Micro Wedding + Elopement Coordinator",cat:"events",cc:{bg:"#FDE8F1",c:"#D64E8A"},tagline:"Coordinate intimate ceremonies of 20 or fewer. Flat fee or percentage of vendor spend.",speed:"slow",speedLabel:"6–10 weeks",earn:"high",earnLabel:"$1,500–$3,000/mo",earnNum:2250,costCat:"low",costLabel:"$100–$250",costNum:175,time:"high",timeLabel:"10–15 hrs/wk",timeNum:12,love:["events","community","creative","organizing"],model:"Venue sourcing, vendor referrals, day-of logistics. Not a florist or caterer. Elopements are a large and growing market with very little hyperlocal competition.",prereqs:["Organized","Detail-oriented","Comfortable with emotional occasions","Vendor relationship skills"],builds:["Venue sourcing guide","Preferred vendor list template","Client intake questionnaire","Coordination SOP","Pricing tiers","Contract template","Canva lookbook template"],umbrella:"TinyWeddingCo.com"},
+        {id:35,name:"Eldercare Errand + Companion Service",cat:"services",cc:{bg:"#EAF4EE",c:"#2D6A4F"},tagline:"Weekly errands, grocery runs, and friendly visits for elderly residents. Referral-driven.",speed:"slow",speedLabel:"4–6 weeks",earn:"mid",earnLabel:"$700–$1,500/mo",earnNum:1100,costCat:"zero",costLabel:"$50–$150",costNum:100,time:"mid",timeLabel:"8–12 hrs/wk",timeNum:10,love:["community","organizing"],model:"Weekly errands, grocery runs, appointment transport, and visits for elderly residents. Not medical. Once referral relationships with senior centers and physicians are established, nearly self-running.",prereqs:["Patient","Reliable","Has a car","Genuine warmth with older adults"],builds:["Service menu and pricing guide","Client intake form","Emergency contact protocol","Liability waiver","Family communication SOP","Senior center referral scripts"],umbrella:"NeighborCareNetwork.com"},
+        {id:36,name:"Local Photographer Collective",cat:"services",cc:{bg:"#F3EEFF",c:"#7C3AED"},tagline:"Curate and manage a local photographer roster. You handle bookings — they handle the camera.",speed:"slow",speedLabel:"4–8 weeks",earn:"high",earnLabel:"$1,200–$2,500/mo",earnNum:1850,costCat:"zero",costLabel:"$0–$100",costNum:50,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["creative","community","organizing"],model:"Recruit and vet local photographers, handle all client booking and payment, take a coordination fee. Every market has photographers who are great behind the lens and terrible at the business side.",prereqs:["Organized","Relationship-building skills","Eye for quality"],builds:["Photographer vetting SOP","Booking and payment processing guide","Client intake form","Photographer agreement","Pricing model","Canva marketing kit"],umbrella:"LocalLensCo.com"},
+        {id:37,name:"Neighborhood Fermentation Club",cat:"food",cc:{bg:"#FEF0E7",c:"#E07A3A"},tagline:"Monthly workshops — sourdough, kombucha, kimchi. Starter kit subscriptions and gifting add-ons.",speed:"slow",speedLabel:"4–6 weeks",earn:"mid",earnLabel:"$700–$1,500/mo",earnNum:1100,costCat:"low",costLabel:"$150–$350",costNum:250,time:"mid",timeLabel:"6–10 hrs/wk",timeNum:8,love:["food","community","creative"],model:"Monthly fermentation workshops and subscription kits. Sourdough, kombucha, kimchi, pickles, kefir. Fermentation is having a sustained cultural moment.",prereqs:["Fermentation hobbyist (self-taught is fine)","Comfortable teaching small groups"],builds:["12-month workshop curriculum","Starter kit sourcing and packaging guide","Pricing model","Liability waiver (food safety language)","Canva kit"],umbrella:"CultureClubCo.com"},
+      ];
+
+      const speedOrder={fast:0,medium:1,slow:2};
+      let filters={speed:null,earn:null,cost:null,time:null,love:null};
+      let sortKey='fit';
+      let searchQ='';
+
+      const sBars={fast:{pct:90,col:'#2D6A4F'},medium:{pct:60,col:'#D4A017'},slow:{pct:30,col:'#C4622D'}};
+      const eBars={low:{pct:35,col:'#95C8A8'},mid:{pct:65,col:'#2D6A4F'},high:{pct:95,col:'#1a4a33'}};
+      const cBars={zero:{pct:20,col:'#2D6A4F'},low:{pct:50,col:'#D4A017'},mid:{pct:80,col:'#C4622D'}};
+      const tBars={low:{pct:25,col:'#2D6A4F'},mid:{pct:55,col:'#D4A017'},high:{pct:85,col:'#C4622D'}};
+
+      function bar(val,map){return`<div class="score-bar"><div class="score-fill" style="width:${map[val].pct}%;background:${map[val].col}"></div></div>`;}
+
+      function score(c){
+        let s=0;
+        if(filters.speed&&c.speed===filters.speed)s+=3;
+        if(filters.earn&&c.earn===filters.earn)s+=3;
+        if(filters.cost&&c.costCat===filters.cost)s+=3;
+        if(filters.time&&c.time===filters.time)s+=3;
+        if(filters.love&&c.love.includes(filters.love))s+=4;
+        return s;
+      }
+
+      function render(){
+        let list=[...C];
+        if(searchQ){const q=searchQ.toLowerCase();list=list.filter(c=>c.name.toLowerCase().includes(q)||c.tagline.toLowerCase().includes(q)||c.cat.includes(q)||c.love.some(l=>l.includes(q)));}
+        if(filters.speed)list=list.filter(c=>c.speed===filters.speed);
+        if(filters.earn)list=list.filter(c=>c.earn===filters.earn);
+        if(filters.cost)list=list.filter(c=>c.costCat===filters.cost);
+        if(filters.time)list=list.filter(c=>c.time===filters.time);
+        if(filters.love)list=list.filter(c=>c.love.includes(filters.love));
+        if(sortKey==='fit')list.sort((a,b)=>score(b)-score(a));
+        else if(sortKey==='earn')list.sort((a,b)=>b.earnNum-a.earnNum);
+        else if(sortKey==='speed')list.sort((a,b)=>speedOrder[a.speed]-speedOrder[b.speed]);
+        else if(sortKey==='cost')list.sort((a,b)=>a.costNum-b.costNum);
+        else if(sortKey==='time')list.sort((a,b)=>a.timeNum-b.timeNum);
+
+        document.getElementById('resultsMeta').innerHTML=`Showing <strong>${list.length}</strong> of ${C.length} concepts`;
+
+        if(!list.length){
+          document.getElementById('grid').innerHTML=`<div class="empty"><div class="empty-emoji">🌱</div><div class="empty-h">No matches</div><p>Try loosening your filters or clearing search.</p></div>`;
+          return;
+        }
+
+        document.getElementById('grid').innerHTML=list.map(c=>`
+          <div class="card" onclick="openModal(${c.id})">
+            <div class="card-top">
+              <div class="card-name">${c.name}</div>
+              <div class="metrics">
+                <div class="metric">
+                  <div class="metric-label">💸 First income</div>
+                  <div class="metric-value">${c.speedLabel}</div>
+                  ${bar(c.speed,sBars)}
+                </div>
+                <div class="metric">
+                  <div class="metric-label">📈 Monthly earn</div>
+                  <div class="metric-value">${c.earnLabel}</div>
+                  ${bar(c.earn,eBars)}
+                </div>
+                <div class="metric">
+                  <div class="metric-label">💰 Startup cost</div>
+                  <div class="metric-value">${c.costLabel}</div>
+                  ${bar(c.costCat,cBars)}
+                </div>
+                <div class="metric">
+                  <div class="metric-label">⏱ Weekly time</div>
+                  <div class="metric-value">${c.timeLabel}</div>
+                  ${bar(c.time,tBars)}
+                </div>
+                <div class="metric full">
+                  <div class="metric-label">❤️ You'll love it if you love...</div>
+                  <div class="love-tags">${c.love.map(l=>`<span class="love-tag" style="background:${c.cc.bg};color:${c.cc.c}">${l}</span>`).join('')}</div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="card-cat" style="background:${c.cc.bg};color:${c.cc.c}">${c.cat}</span>
+              <span class="card-cta">Learn more →</span>
+            </div>
+          </div>`).join('');
+      }
+
+      function openModal(id){
+        const c=C.find(x=>x.id===id);
+        if(!c)return;
+        document.getElementById('modalInner').innerHTML=`
+          <div class="modal-cat-badge" style="background:${c.cc.bg};color:${c.cc.c}">${c.cat}</div>
+          <div class="modal-title">${c.name}</div>
+          <div class="modal-tagline">${c.tagline}</div>
+          <div class="modal-section">
+            <div class="modal-section-title">The five things that matter</div>
+            <div class="modal-metrics-grid">
+              <div class="modal-metric"><div class="modal-metric-icon">💸</div><div class="modal-metric-label">First income</div><div class="modal-metric-value">${c.speedLabel}</div>${bar(c.speed,sBars)}<div class="modal-metric-detail">How quickly you can expect your first paying customer</div></div>
+              <div class="modal-metric"><div class="modal-metric-icon">📈</div><div class="modal-metric-label">Monthly earning</div><div class="modal-metric-value">${c.earnLabel}</div>${bar(c.earn,eBars)}<div class="modal-metric-detail">Realistic range once you have steady customers</div></div>
+              <div class="modal-metric"><div class="modal-metric-icon">💰</div><div class="modal-metric-label">Startup cost</div><div class="modal-metric-value">${c.costLabel}</div>${bar(c.costCat,cBars)}<div class="modal-metric-detail">What you spend before your first dollar comes in</div></div>
+              <div class="modal-metric"><div class="modal-metric-icon">⏱</div><div class="modal-metric-label">Weekly time</div><div class="modal-metric-value">${c.timeLabel}</div>${bar(c.time,tBars)}<div class="modal-metric-detail">Ongoing effort once you're up and running</div></div>
+            </div>
+            <div class="modal-metric" style="margin-top:10px"><div class="modal-metric-icon">❤️</div><div class="modal-metric-label">You'll love this if you love...</div><div class="love-tags" style="margin-top:6px">${c.love.map(l=>`<span class="love-tag" style="background:${c.cc.bg};color:${c.cc.c}">${l}</span>`).join('')}</div></div>
+          </div>
+          <div class="modal-section"><div class="modal-section-title">How it works</div><div class="modal-tagline">${c.model}</div></div>
+          <div class="modal-section"><div class="modal-section-title">What you need</div><div class="prereq-list">${c.prereqs.map(p=>`<span class="prereq-chip">${p}</span>`).join('')}</div></div>
+          <div class="modal-section"><div class="modal-section-title">What Kitchen Table Co builds for you</div><div class="builds-list">${c.builds.map(b=>`<span class="build-chip">${b}</span>`).join('')}</div></div>
+          <div class="modal-section"><div class="modal-section-title">Your deposit + take-home</div><div class="modal-metrics-grid"><div class="modal-metric"><div class="modal-metric-label">To get started</div><div class="modal-metric-value">$99</div><div class="modal-metric-detail">Credited against your first platform fees</div></div><div class="modal-metric"><div class="modal-metric-label">Your earnings</div><div class="modal-metric-value">85% of sales</div><div class="modal-metric-detail">Paid out automatically via Stripe</div></div></div></div>
+          <div class="modal-section"><div class="modal-section-title">Umbrella brand site</div><div style="font-size:14px;font-weight:600;color:var(--green)">${c.umbrella}</div></div>
+          <div class="modal-cta"><button class="btn-p">Apply for This Territory</button><button class="btn-s">Save Concept</button></div>
+        `;
+        document.getElementById('overlay').classList.add('open');
+      }
+
+      document.querySelectorAll('.chip[data-group]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const g=btn.dataset.group,v=btn.dataset.val;
+          if(filters[g]===v){filters[g]=null;btn.classList.remove('on');}
+          else{document.querySelectorAll(`.chip[data-group="${g}"]`).forEach(b=>b.classList.remove('on'));filters[g]=v;btn.classList.add('on');}
+          render();
+        });
+      });
+      document.querySelectorAll('.sort-btn').forEach(btn=>{
+        btn.addEventListener('click',()=>{document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');sortKey=btn.dataset.sort;render();});
+      });
+      document.getElementById('searchInput').addEventListener('input',e=>{searchQ=e.target.value;render();});
+      document.getElementById('modalClose').addEventListener('click',()=>document.getElementById('overlay').classList.remove('open'));
+      document.getElementById('overlay').addEventListener('click',e=>{if(e.target===document.getElementById('overlay'))document.getElementById('overlay').classList.remove('open');});
+      document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('overlay').classList.remove('open');});
+      render();
+    </script>
   </body>
 </html>
