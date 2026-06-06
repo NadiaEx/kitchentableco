@@ -135,12 +135,36 @@ function Hero() {
           We build it.<br />
           <span className="italic font-normal">You run the neighborhood.</span>
         </h1>
-        <p className="mt-8 max-w-2xl font-sans text-lg leading-relaxed text-ink/80 sm:text-xl">
-          Kitchen Table Co. is a done-for-you neighborhood business — matched to your life,
-          built start to finish, handed over ready to open. For the woman who has a hunch
-          that she could be the one her neighborhood comes to, and an hour free after the
-          kids are in bed.
-        </p>
+        <div className="mt-8 max-w-2xl space-y-6 font-sans text-lg leading-relaxed text-ink/80 sm:text-xl">
+          <p>
+            Kitchen Table Co. helps women build small businesses that strengthen their lives,
+            their neighborhoods, and their future.
+          </p>
+          <p>
+            We believe meaningful businesses don't have to start with venture capital,
+            complicated business plans, or endless hustle.
+          </p>
+          <p>
+            They start with a skill, an opportunity, a community, and someone willing to
+            take the first step.
+          </p>
+          <p>That's where we come in.</p>
+          <p>
+            We help you discover the right business for your season of life, build it
+            alongside you, and launch it with confidence.
+          </p>
+          <p>
+            Whether your goal is extra income, greater flexibility, new friendships, a
+            growing savings account, or simply something that's yours, Kitchen Table Co. is
+            your partner from idea to opening day.
+          </p>
+          <p>Because building a business isn't just about making money.</p>
+          <p>
+            It's about creating a life with more freedom, more connection, and more
+            possibility.
+          </p>
+          <p>Pull up a chair. There's room for you here.</p>
+        </div>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:gap-4">
           <a
             href="#finder"
