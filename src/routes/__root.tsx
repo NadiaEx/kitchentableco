@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Kitchen Table Co" },
+      { name: "description", content: "You've been running things your whole life. Kitchen Table Co just makes it official. License a ready-to-run local business, claim your territory, and keep 85% o" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Kitchen Table Co" },
+      { property: "og:description", content: "You've been running things your whole life. Kitchen Table Co just makes it official. License a ready-to-run local business, claim your territory, and keep 85% o" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Kitchen Table Co" },
+      { name: "twitter:description", content: "You've been running things your whole life. Kitchen Table Co just makes it official. License a ready-to-run local business, claim your territory, and keep 85% o" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a017989-2065-4a71-b22d-5cdbf88853ea" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a017989-2065-4a71-b22d-5cdbf88853ea" },
     ],
     links: [
       {
