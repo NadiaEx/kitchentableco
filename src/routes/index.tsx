@@ -5,24 +5,139 @@ import { TableMark } from "@/components/table-mark";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kitchen Table Co. — We build it. You run the neighborhood." },
+      { title: "Kitchen Table Co. — Local Businesses Built for Moms" },
       {
         name: "description",
         content:
-          "A done-for-you neighborhood business, built for moms by a mom who's done it before. Cohort 1 is open — 30 spots.",
+          "We build the business. You run the neighborhood. Kitchen Table Co licenses ready-to-run local businesses to moms — $99 to start, 85% to keep. Cohort 1 now open — 30 spots.",
       },
-      { property: "og:title", content: "Kitchen Table Co." },
+      {
+        name: "keywords",
+        content:
+          "mom business ideas, local business for moms, side hustle for moms, work from home mom, start a business as a mom, kitchen table business, mom entrepreneur",
+      },
+      { name: "author", content: "Kitchen Table Co" },
+      { name: "robots", content: "index, follow" },
+
+      // Open Graph
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://kitchentableco.com/" },
+      { property: "og:title", content: "Kitchen Table Co. — Local Businesses Built for Moms" },
       {
         property: "og:description",
-        content: "We build it. You run the neighborhood. Cohort 1 is open.",
+        content:
+          "We build the business. You run the neighborhood. 37 ready-to-run local business concepts. Exclusive territories. $99 to start. 85% yours to keep.",
       },
+      { property: "og:image", content: "https://kitchentableco.com/og-image.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:site_name", content: "Kitchen Table Co." },
+      { property: "og:locale", content: "en_US" },
+
+      // Twitter / X
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:url", content: "https://kitchentableco.com/" },
+      { name: "twitter:title", content: "Kitchen Table Co. — Local Businesses Built for Moms" },
+      {
+        name: "twitter:description",
+        content:
+          "We build the business. You run the neighborhood. 37 ready-to-run local business concepts. $99 to start. 85% yours.",
+      },
+      { name: "twitter:image", content: "https://kitchentableco.com/og-image.jpg" },
+
+      // AI summary
+      {
+        name: "summary",
+        content:
+          "Kitchen Table Co is a licensing platform that packages turnkey local businesses for mom operators. 37 concepts across food, kids, community, services, and events. Operators pay a $99 deposit, receive a complete operator package, and keep 85% of all revenue. Cohort 1 is open with 30 spots across 5 concepts.",
+      },
+
+      // Google Search Console — replace with your code from GSC
+      { name: "google-site-verification", content: "PASTE_YOUR_GSC_CODE_HERE" },
     ],
     links: [
+      { rel: "canonical", href: "https://kitchentableco.com/" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Kitchen Table Co.",
+          url: "https://kitchentableco.com",
+          logo: "https://kitchentableco.com/logo.png",
+          description:
+            "Kitchen Table Co licenses turnkey local businesses to mom operators. 37 concepts, exclusive territories, $99 to start, 85% to keep.",
+          founder: { "@type": "Person", name: "Nadia" },
+          sameAs: [
+            "https://www.facebook.com/kitchentableco",
+            "https://www.instagram.com/kitchentableco",
+          ],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "Is Kitchen Table Co a franchise?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "No. Kitchen Table Co is a licensing model, not a franchise. There is no FDD, no franchise fees, and no royalties. You are an independent operator licensing a brand and a complete business package.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "How much does it cost to get started?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "The territory deposit is $99. This is not a fee — it is a credit applied against your first platform fees. Your first $660 in gross sales comes to you at full take-home. After that, you keep 85% of everything.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "How much time does it take each week?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Most concepts run on five to ten hours a week once they're set up. You set the ceiling.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "What's included for $99?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Your matched concept, the full build including site, booking, payments, and brand, the operating playbook, supplier intros, and twelve weeks of weekly office hours.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "What concepts are available for Cohort 1?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Cohort 1 includes Craft Club, Mom's Night Out, Sensory Playdate Network, Kids Cooking Club, and Neighborhood Babysitting Co-op. 6 spots per concept, 30 spots total.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "What happens to my social media accounts if I leave?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Social media accounts belong to Kitchen Table Co and stay with the territory. You are added as an admin while your agreement is active. When you exit, admin access is removed within 48 hours.",
+              },
+            },
+          ],
+        }),
       },
     ],
   }),
@@ -33,32 +148,27 @@ const steps = [
   {
     n: "01",
     title: "You apply.",
-    body:
-      "Tell us about your neighborhood, your week, and what you're hoping for. Takes about ten minutes. No résumé. No pitch deck.",
+    body: "Tell us about your neighborhood, your week, and what you're hoping for. Takes about ten minutes. No résumé. No pitch deck.",
   },
   {
     n: "02",
     title: "We find your concept.",
-    body:
-      "Using the fit finder above, we match you with one of our four tested neighborhood businesses — the one that fits your time, your block, and the way you actually like to spend a Tuesday.",
+    body: "Using the fit finder above, we match you with one of our four tested neighborhood businesses — the one that fits your time, your block, and the way you actually like to spend a Tuesday.",
   },
   {
     n: "03",
     title: "We build it for you.",
-    body:
-      "Website, booking, payments, supplier list, the playbook, the welcome scripts. Done. You don't have to figure any of it out from scratch.",
+    body: "Website, booking, payments, supplier list, the playbook, the welcome scripts. Done. You don't have to figure any of it out from scratch.",
   },
   {
     n: "04",
     title: "You open the doors.",
-    body:
-      "We hand you the keys with a soft-launch plan for the first ten neighbors. You run it. We're a text away.",
+    body: "We hand you the keys with a soft-launch plan for the first ten neighbors. You run it. We're a text away.",
   },
   {
     n: "05",
     title: "You grow it your way.",
-    body:
-      "Some women keep it small and steady. Some scale into something bigger. Both are wins. You decide what enough looks like.",
+    body: "Some women keep it small and steady. Some scale into something bigger. Both are wins. You decide what enough looks like.",
   },
 ];
 
@@ -102,10 +212,12 @@ function Index() {
   );
 }
 
-
 function Nav() {
   return (
-    <header className="sticky top-0 z-30 border-b border-rule bg-background/95 backdrop-blur">
+    <header
+      aria-label="Site navigation"
+      className="sticky top-0 z-30 border-b border-rule bg-background/95 backdrop-blur"
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <a href="#top" className="flex items-center gap-3 text-forest">
           <TableMark className="h-8 w-8" />
@@ -117,6 +229,7 @@ function Nav() {
           href="https://tally.so/r/LZOGjv"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Apply for Kitchen Table Co Cohort 1 — opens application form"
           className="inline-flex items-center rounded-sm bg-forest px-4 py-2.5 text-sm font-medium text-forest-foreground transition-colors hover:bg-forest/90 sm:px-5"
         >
           Apply for Cohort 1
@@ -178,6 +291,7 @@ function Hero() {
             href="https://tally.so/r/LZOGjv"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Apply for Kitchen Table Co Cohort 1 — opens application form"
             className="inline-flex items-center justify-center rounded-sm border border-forest px-6 py-3.5 font-sans text-base font-medium text-forest transition-colors hover:bg-forest hover:text-forest-foreground"
           >
             Apply now
@@ -355,6 +469,7 @@ function Footer() {
           href="https://tally.so/r/LZOGjv"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Apply for Kitchen Table Co Cohort 1 — opens application form"
           className="inline-flex items-center justify-center rounded-sm bg-cream px-7 py-4 font-sans text-base font-medium text-forest transition-colors hover:bg-cream/90"
         >
           Apply for Cohort 1
