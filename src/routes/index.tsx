@@ -96,12 +96,12 @@ function Index() {
       <Hero />
       <FitFinder />
       <HowItWorks />
-      <PriceExplained />
       <Faq />
       <Footer />
     </div>
   );
 }
+
 
 function Nav() {
   return (
