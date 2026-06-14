@@ -114,7 +114,9 @@ function Nav() {
           </span>
         </a>
         <a
-          href="#apply"
+          href="https://tally.so/r/LZOGjv"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center rounded-sm bg-forest px-4 py-2.5 text-sm font-medium text-forest-foreground transition-colors hover:bg-forest/90 sm:px-5"
         >
           Apply for Cohort 1
