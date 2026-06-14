@@ -298,7 +298,7 @@
           <div class="modal-section"><div class="modal-section-title">What Kitchen Table Co builds for you</div><div class="builds-list">${c.builds.map(b=>`<span class="build-chip">${b}</span>`).join('')}</div></div>
           <div class="modal-section"><div class="modal-section-title">Your deposit + take-home</div><div class="modal-metrics-grid"><div class="modal-metric"><div class="modal-metric-label">To get started</div><div class="modal-metric-value">$99</div><div class="modal-metric-detail">Credited against your first platform fees</div></div><div class="modal-metric"><div class="modal-metric-label">Your earnings</div><div class="modal-metric-value">85% of sales</div><div class="modal-metric-detail">Paid out automatically via Stripe</div></div></div></div>
           <div class="modal-section"><div class="modal-section-title">Umbrella brand site</div><div style="font-size:14px;font-weight:600;color:var(--green)">${c.umbrella}</div></div>
-          <div class="modal-cta"><button class="btn-p" onclick="applyTerritory(${c.id})">Apply for This Territory</button><button class="btn-s">Save Concept</button></div>
+          <div class="modal-cta"><button class="btn-p" onclick="applyTerritory(${c.id})">Apply for This Territory</button></div>
         `;
         document.getElementById('overlay').classList.add('open');
       }
@@ -306,9 +306,7 @@
       function applyTerritory(id){
         const c=C.find(x=>x.id===id);
         if(!c)return;
-        const territory=prompt("What's your territory? (ZIP code, neighborhood, or city)");
-        if(territory===null)return;
-        const params=new URLSearchParams({concept:c.name,territory:territory.trim()});
+        const params=new URLSearchParams({concept:c.name});
         window.open(`https://tally.so/r/LZOGjv?${params.toString()}`,'_blank','noopener');
       }
 
