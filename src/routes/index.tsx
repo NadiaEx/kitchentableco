@@ -175,7 +175,9 @@ function Hero() {
             Find my concept
           </a>
           <a
-            href="#apply"
+            href="https://tally.so/r/LZOGjv"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center justify-center rounded-sm border border-forest px-6 py-3.5 font-sans text-base font-medium text-forest transition-colors hover:bg-forest hover:text-forest-foreground"
           >
             Apply now
