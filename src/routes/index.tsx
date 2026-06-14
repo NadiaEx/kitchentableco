@@ -352,7 +352,9 @@ function Footer() {
           </p>
         </div>
         <a
-          href="#apply"
+          href="https://tally.so/r/LZOGjv"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center justify-center rounded-sm bg-cream px-7 py-4 font-sans text-base font-medium text-forest transition-colors hover:bg-cream/90"
         >
           Apply for Cohort 1
