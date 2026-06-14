@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+/import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { TableMark } from "@/components/table-mark";
 
@@ -175,19 +175,27 @@ const steps = [
 const faqs = [
   {
     q: "Is this a franchise?",
-    a: "No. You own your business outright — the name, the customers, the income. We're more like a co-founder who builds the hard parts and then steps back.",
+    a: "No. Kitchen Table Co is a licensing model, not a franchise. There's no FDD, no franchise fees, and no royalties. You license a brand, a complete business package, and an exclusive territory. You run the business. We built everything you need to do it.",
+  },
+  {
+    q: "What's actually included?",
+    a: "Everything. Website, booking and payments, a 12-month curriculum or operating guide (depending on your concept), SOPs and playbook, supply and vendor sourcing where relevant, a Canva brand kit, legal templates, automations, a social media plan, vendor and partner outreach scripts, 12 hours of operator training, and 12 months of support. The dot matrix on our concepts page shows exactly what's included for each concept.",
+  },
+  {
+    q: "What are my two pricing options?",
+    a: "Option A: Pay a deposit upfront (between $250 and $8,000 depending on the concept) and keep 90% of everything you earn — we take 10%. Option B: No deposit, zero upfront cost, but we take 20% of your gross sales. Both options include a buyout price so you can own the concept outright at any time. Most operators choose Option A because the math works out better the moment you start earning.",
+  },
+  {
+    q: "What does buyout mean?",
+    a: "At any point, you can buy out your licensing agreement entirely and own the concept outright — no more platform fees, ever. Buyout prices are fixed and listed on each concept. They range from $1,500 for our simplest concepts up to $40,000 for our most complex builds. Think of it as converting a license into full ownership.",
   },
   {
     q: "What if I've never run a business before?",
-    a: "Most of the women in Cohort 1 haven't. The whole point is that we built this for the mom who has a hunch and a free hour after bedtime, not for someone with an MBA.",
+    a: "Most of the women in Cohort 1 haven't. The whole point is that we built this for the mom who has a hunch and a free hour after bedtime, not for someone with an MBA. The playbook, the training, and the 12 months of support exist precisely because we don't expect you to figure it out alone.",
   },
   {
     q: "How much time does it take each week?",
     a: "Most concepts run on five to ten hours a week once they're set up. A few of them can grow into something bigger if that's what you want. You set the ceiling.",
-  },
-  {
-    q: "What's actually included for $99?",
-    a: "Your matched concept, the full build (site, booking, payments, brand), the operating playbook, supplier intros, and twelve weeks of weekly office hours with me and the cohort. That's the whole thing.",
   },
   {
     q: "When does Cohort 1 start?",
