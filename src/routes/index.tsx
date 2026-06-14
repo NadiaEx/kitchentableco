@@ -114,7 +114,9 @@ function Nav() {
           </span>
         </a>
         <a
-          href="#apply"
+          href="https://tally.so/r/LZOGjv"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center rounded-sm bg-forest px-4 py-2.5 text-sm font-medium text-forest-foreground transition-colors hover:bg-forest/90 sm:px-5"
         >
           Apply for Cohort 1
@@ -173,7 +175,9 @@ function Hero() {
             Find my concept
           </a>
           <a
-            href="#apply"
+            href="https://tally.so/r/LZOGjv"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center justify-center rounded-sm border border-forest px-6 py-3.5 font-sans text-base font-medium text-forest transition-colors hover:bg-forest hover:text-forest-foreground"
           >
             Apply now
@@ -348,7 +352,9 @@ function Footer() {
           </p>
         </div>
         <a
-          href="#apply"
+          href="https://tally.so/r/LZOGjv"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center justify-center rounded-sm bg-cream px-7 py-4 font-sans text-base font-medium text-forest transition-colors hover:bg-cream/90"
         >
           Apply for Cohort 1
